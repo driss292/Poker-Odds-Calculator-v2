@@ -1,0 +1,14 @@
+{
+  "manifest_version": 3,
+  "name": "POC - Poker Odds Calculator",
+  "version": "1.0.0",
+  "action": {
+    "default_popup": "index.html"
+  },
+  "permissions": ["scripting", "tabs"],
+  "host_permissions": ["http://*/*", "https://*/*"],
+  "description": "Calculate your poker odds in real-time to improve your game and make better decisions at the table.",
+  "icons": {
+    "32": "icon32.png"
+  }
+}
