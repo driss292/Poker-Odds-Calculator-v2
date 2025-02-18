@@ -1,0 +1,34 @@
+.card {
+  width: 35px;
+  height: 50px;
+  background: white;
+  border: 0.2px solid #000;
+  border-radius: 4px;
+  margin: auto;
+  -webkit-box-shadow: 2px 6px 6px -2px rgba(0, 0, 0, 0.56);
+  -moz-box-shadow: 2px 6px 6px -2px rgba(0, 0, 0, 0.56);
+  box-shadow: 2px 6px 6px -2px rgba(0, 0, 0, 0.56);
+  cursor: pointer;
+
+  .suit {
+    width: 20px;
+    margin-left: 10px;
+    margin-bottom: 2px;
+  }
+  .value {
+    font-size: 24px;
+    font-weight: 800;
+    margin-left: 3px;
+  }
+  .redCard {
+    color: #ff0000;
+  }
+  .dragging {
+    opacity: 0.6; /* Légèrement transparent */
+    transform: scale(1.05); /* Légère mise à l'échelle pour l'effet de zoom */
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3); /* Ombre portée pour un effet de profondeur */
+    cursor: grabbing; /* Changer le curseur pour indiquer que l'élément est en train d'être déplacé */
+    z-index: 1000; /* S'assurer que l'élément reste au-dessus des autres éléments */
+    pointer-events: none; /* Empêcher l'élément de bloquer les événements pendant le drag */
+  }
+}

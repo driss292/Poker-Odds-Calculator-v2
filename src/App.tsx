@@ -3,6 +3,7 @@ import style from "./App.module.css";
 import { useMemo, useState } from "react";
 import { dataSeat, suits } from "./utils/data";
 import { generateCardBySuit, getCardColor } from "./utils/functions";
+import Card from "./components/Card/Card";
 
 // Interface pour les cartes
 interface ICard {
@@ -35,19 +36,8 @@ function App() {
   const [turnCard, setTurnCard] = useState(null); // La carte du turn
   const [riverCard, setRiverCard] = useState(null); // La carte de la river
 
-  // const cardColor = getCardColor(suit);
-  // if (!cardColor) {
-  //   console.error(`Invalid suit provided: ${suit}`);
-  //   return null;
-  // }
-
-  // const { src, color } = cardColor;
-
   // Utiliser useMemo pour éviter la régénération des cartes à chaque re-render
-  // const cards = useMemo(() => generateCardBySuit(), []); // Appel sans argument
-
-  //     // Récupérer les données de la couleur et du symbole pour chaque suit
-  // const suitData = getCardColor(suit);
+  const cards = useMemo(() => generateCardBySuit(), []); // Appel sans argument
 
   return (
     <main className="App">
@@ -144,30 +134,32 @@ function App() {
         </div>
 
         {/* SEAT */}
-        {dataSeat.map((data) => (
-          <div
-            key={data.id}
-            id={`player-${data.id}`}
-            className={style.seat}
-            style={{
-              left: `${data.posX}px`,
-              top: `${data.posY}px`,
-            }}
-          >
-            <div className={style.id}>player {data.id}</div>
-            <div className={style.cardContainer}>
-              {/* Placeholders pour les cartes */}
-              <div className={style.cardPlaceholder}></div>
-              <div className={style.cardPlaceholder}></div>
+        {dataSeat.map((data) => {
+          const playerId = `player${data.id}`;
+          const playerScore =
+            dataPlayerSeat[playerId].score === 0
+              ? "00.00"
+              : `${dataPlayerSeat[playerId].score}`;
+          return (
+            <div
+              key={data.id}
+              id={playerId}
+              className={style.seat}
+              style={{
+                left: `${data.posX}px`,
+                top: `${data.posY}px`,
+              }}
+            >
+              <div className={style.id}>player {data.id}</div>
+              <div className={style.cardContainer}>
+                {/* Placeholders pour les cartes */}
+                <div className={style.cardPlaceholder}></div>
+                <div className={style.cardPlaceholder}></div>
+              </div>
+              <div className={style.score}>{playerScore}%</div>
             </div>
-            <div className={style.score}>
-              {dataPlayerSeat[`player${data.id}`].score === 0
-                ? "00.00"
-                : `${dataPlayerSeat[`player${data.id}`].score}`}
-              %
-            </div>
-          </div>
-        ))}
+          );
+        })}
       </div>
 
       {/* DECK */}
@@ -185,24 +177,13 @@ function App() {
                   />
                 )}
               </div>
-              {/* {cards.map((card) => {
-                const cardColor = getCardColor(card.suit);
-                return (
-                  <div
-                    key={`${card.suit}-${card.value}`}
-                    className={style.card}
-                  >
-                    <p className={`${style.value} ${cardColor?.color ?? ""}`}>
-                      {card.value}
-                    </p>
-                    <img
-                      className={style.suit}
-                      src={cardColor?.src ?? ""}
-                      alt={card.suit}
-                    />
-                  </div>
-                );
-              })} */}
+              {cards.map((card) => (
+                <Card
+                  key={`${card.id}-${card.content}`}
+                  suit={suit.content}
+                  value={card.content}
+                />
+              ))}
             </div>
           );
         })}
