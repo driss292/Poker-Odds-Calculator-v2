@@ -4,6 +4,7 @@ import { useMemo, useState } from "react";
 import { dataSeat, suits } from "./utils/data";
 import { generateCardBySuit, getCardColor } from "./utils/functions";
 import Card from "./components/Card/Card";
+import { DndContext } from "@dnd-kit/core";
 
 // Interface pour les cartes
 interface ICard {
@@ -40,155 +41,157 @@ function App() {
   const cards = useMemo(() => generateCardBySuit(), []); // Appel sans argument
 
   return (
-    <main className="App">
-      <div className={style.table}>
-        <img
-          className={style.imgTable}
-          src="/assets/table-poker.jpg"
-          alt="poker table"
-        />
-        <div
-          style={{
-            position: "absolute",
-            bottom: "225px",
-            left: "30px",
-            color: "white",
-            cursor: "pointer",
-          }}
-          // onClick={onReset}
-        >
-          <span
-            style={{
-              fontSize: "15px",
-              position: "absolute",
-              left: "0px",
-              bottom: "-10px",
-            }}
-          >
-            Reset
-          </span>
-          <RiResetLeftFill style={{ fontSize: "40px" }} />
-        </div>
-        {/* BOARD */}
-        <div className={style.boardContainer}>
-          {/* Flop */}
+    <DndContext>
+      <main className="App">
+        <div className={style.table}>
+          <img
+            className={style.imgTable}
+            src="/assets/table-poker.jpg"
+            alt="poker table"
+          />
           <div
-            className={style.cardZone}
-            style={{ display: "flex", marginRight: "10px" }}
+            style={{
+              position: "absolute",
+              bottom: "225px",
+              left: "30px",
+              color: "white",
+              cursor: "pointer",
+            }}
+            // onClick={onReset}
           >
             <span
-              className={style.titleZone}
               style={{
-                top: "55px",
-                left: "47px",
+                fontSize: "15px",
+                position: "absolute",
+                left: "0px",
+                bottom: "-10px",
               }}
             >
-              Flop
+              Reset
             </span>
-            {Object.entries(flopCards).map(([key, card], index) => (
-              <div
-                key={key}
-                style={{ marginLeft: index > 0 ? "5px" : "0px" }}
-                className={
-                  card ? style.cardPlaceholderOfCard : style.cardPlaceholder
-                }
-              ></div>
-            ))}
+            <RiResetLeftFill style={{ fontSize: "40px" }} />
           </div>
-
-          {/* Turn */}
-          <div className={style.cardZone} style={{ marginRight: "10px" }}>
-            <span
-              className={style.titleZone}
-              style={{
-                top: "55px",
-                left: "131px",
-              }}
-            >
-              Turn
-            </span>
-            {turnCard ? (
-              <div className={style.cardPlaceholderOfCard}></div>
-            ) : (
-              <div className={style.cardPlaceholder}></div>
-            )}
-          </div>
-
-          {/* River */}
-          <div className={style.cardZone}>
-            <span
-              className={style.titleZone}
-              style={{
-                top: "55px",
-                left: "175px",
-              }}
-            >
-              River
-            </span>
-            {riverCard ? (
-              <div className={style.cardPlaceholderOfCard}></div>
-            ) : (
-              <div className={style.cardPlaceholder}></div>
-            )}
-          </div>
-        </div>
-
-        {/* SEAT */}
-        {dataSeat.map((data) => {
-          const playerId = `player${data.id}`;
-          const playerScore =
-            dataPlayerSeat[playerId].score === 0
-              ? "00.00"
-              : `${dataPlayerSeat[playerId].score}`;
-          return (
+          {/* BOARD */}
+          <div className={style.boardContainer}>
+            {/* Flop */}
             <div
-              key={data.id}
-              id={playerId}
-              className={style.seat}
-              style={{
-                left: `${data.posX}px`,
-                top: `${data.posY}px`,
-              }}
+              className={style.cardZone}
+              style={{ display: "flex", marginRight: "10px" }}
             >
-              <div className={style.id}>player {data.id}</div>
-              <div className={style.cardContainer}>
-                {/* Placeholders pour les cartes */}
-                <div className={style.cardPlaceholder}></div>
-                <div className={style.cardPlaceholder}></div>
-              </div>
-              <div className={style.score}>{playerScore}%</div>
-            </div>
-          );
-        })}
-      </div>
-
-      {/* DECK */}
-      <div className={style.deck}>
-        {suits.map((suit) => {
-          const suitData = getCardColor(suit.content);
-          return (
-            <div key={suit.id} className={style.suits}>
-              <div className={`${style.block} ${suitData?.color ?? ""}`}>
-                {suitData && (
-                  <img
-                    src={suitData.src}
-                    alt={suit.content}
-                    className={style.symbol}
-                  />
-                )}
-              </div>
-              {cards.map((card) => (
-                <Card
-                  key={`${card.id}-${card.content}`}
-                  suit={suit.content}
-                  value={card.content}
-                />
+              <span
+                className={style.titleZone}
+                style={{
+                  top: "55px",
+                  left: "47px",
+                }}
+              >
+                Flop
+              </span>
+              {Object.entries(flopCards).map(([key, card], index) => (
+                <div
+                  key={key}
+                  style={{ marginLeft: index > 0 ? "5px" : "0px" }}
+                  className={
+                    card ? style.cardPlaceholderOfCard : style.cardPlaceholder
+                  }
+                ></div>
               ))}
             </div>
-          );
-        })}
-      </div>
-    </main>
+
+            {/* Turn */}
+            <div className={style.cardZone} style={{ marginRight: "10px" }}>
+              <span
+                className={style.titleZone}
+                style={{
+                  top: "55px",
+                  left: "131px",
+                }}
+              >
+                Turn
+              </span>
+              {turnCard ? (
+                <div className={style.cardPlaceholderOfCard}></div>
+              ) : (
+                <div className={style.cardPlaceholder}></div>
+              )}
+            </div>
+
+            {/* River */}
+            <div className={style.cardZone}>
+              <span
+                className={style.titleZone}
+                style={{
+                  top: "55px",
+                  left: "175px",
+                }}
+              >
+                River
+              </span>
+              {riverCard ? (
+                <div className={style.cardPlaceholderOfCard}></div>
+              ) : (
+                <div className={style.cardPlaceholder}></div>
+              )}
+            </div>
+          </div>
+
+          {/* SEAT */}
+          {dataSeat.map((data) => {
+            const playerId = `player${data.id}`;
+            const playerScore =
+              dataPlayerSeat[playerId].score === 0
+                ? "00.00"
+                : `${dataPlayerSeat[playerId].score}`;
+            return (
+              <div
+                key={data.id}
+                id={playerId}
+                className={style.seat}
+                style={{
+                  left: `${data.posX}px`,
+                  top: `${data.posY}px`,
+                }}
+              >
+                <div className={style.id}>player {data.id}</div>
+                <div className={style.cardContainer}>
+                  {/* Placeholders pour les cartes */}
+                  <div className={style.cardPlaceholder}></div>
+                  <div className={style.cardPlaceholder}></div>
+                </div>
+                <div className={style.score}>{playerScore}%</div>
+              </div>
+            );
+          })}
+        </div>
+
+        {/* DECK */}
+        <div className={style.deck}>
+          {suits.map((suit) => {
+            const suitData = getCardColor(suit.content);
+            return (
+              <div key={suit.id} className={style.suits}>
+                <div className={`${style.block} ${suitData?.color ?? ""}`}>
+                  {suitData && (
+                    <img
+                      src={suitData.src}
+                      alt={suit.content}
+                      className={style.symbol}
+                    />
+                  )}
+                </div>
+                {cards.map((card) => (
+                  <Card
+                    key={`${card.id}-${card.content}`}
+                    suit={suit.content}
+                    value={card.content}
+                  />
+                ))}
+              </div>
+            );
+          })}
+        </div>
+      </main>
+    </DndContext>
   );
 }
 
