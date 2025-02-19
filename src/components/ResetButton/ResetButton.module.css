@@ -1,0 +1,14 @@
+.resetButton {
+  position: absolute;
+  bottom: 225px;
+  left: 30px;
+  color: white;
+  cursor: pointer;
+}
+
+.resetButtonText {
+  font-size: 15px;
+  position: absolute;
+  left: 0px;
+  bottom: -10px;
+}

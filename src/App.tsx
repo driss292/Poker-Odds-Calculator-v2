@@ -1,13 +1,15 @@
-import { RiResetLeftFill } from "react-icons/ri";
 import style from "./App.module.css";
 import { useMemo, useState } from "react";
 import { dataSeat, suits } from "./utils/data";
 import { generateCardBySuit, getCardColor } from "./utils/functions";
 import Card from "./components/Card/Card";
 import { DndContext } from "@dnd-kit/core";
+import CardPlaceholder from "./components/CardPlaceholder/CardPlaceholder";
+import Seat from "./components/Seat/Seat";
+import ResetButton from "./components/ResetButton/ResetButton";
 
 // Interface pour les cartes
-interface ICard {
+export interface ICard {
   value: string; // La valeur de la carte, par exemple 'A', '10', etc.
   suit: string; // La couleur de la carte, par exemple 'hearts', 'diamonds'
   src: string; // Le chemin de l'image de la carte, par exemple '/images/ace_of_hearts.png'
@@ -40,6 +42,13 @@ function App() {
   // Utiliser useMemo pour éviter la régénération des cartes à chaque re-render
   const cards = useMemo(() => generateCardBySuit(), []); // Appel sans argument
 
+  const handleReset = () => {
+    setDataPlayerSeat(initialPlayerState);
+    setFlopCards(initialFlopState);
+    setTurnCard(null);
+    setRiverCard(null);
+  };
+
   return (
     <DndContext>
       <main className="App">
@@ -49,28 +58,7 @@ function App() {
             src="/assets/table-poker.jpg"
             alt="poker table"
           />
-          <div
-            style={{
-              position: "absolute",
-              bottom: "225px",
-              left: "30px",
-              color: "white",
-              cursor: "pointer",
-            }}
-            // onClick={onReset}
-          >
-            <span
-              style={{
-                fontSize: "15px",
-                position: "absolute",
-                left: "0px",
-                bottom: "-10px",
-              }}
-            >
-              Reset
-            </span>
-            <RiResetLeftFill style={{ fontSize: "40px" }} />
-          </div>
+          <ResetButton handleReset={handleReset} />
           {/* BOARD */}
           <div className={style.boardContainer}>
             {/* Flop */}
@@ -112,7 +100,7 @@ function App() {
               {turnCard ? (
                 <div className={style.cardPlaceholderOfCard}></div>
               ) : (
-                <div className={style.cardPlaceholder}></div>
+                <CardPlaceholder />
               )}
             </div>
 
@@ -130,38 +118,15 @@ function App() {
               {riverCard ? (
                 <div className={style.cardPlaceholderOfCard}></div>
               ) : (
-                <div className={style.cardPlaceholder}></div>
+                <CardPlaceholder />
               )}
             </div>
           </div>
 
           {/* SEAT */}
-          {dataSeat.map((data) => {
-            const playerId = `player${data.id}`;
-            const playerScore =
-              dataPlayerSeat[playerId].score === 0
-                ? "00.00"
-                : `${dataPlayerSeat[playerId].score}`;
-            return (
-              <div
-                key={data.id}
-                id={playerId}
-                className={style.seat}
-                style={{
-                  left: `${data.posX}px`,
-                  top: `${data.posY}px`,
-                }}
-              >
-                <div className={style.id}>player {data.id}</div>
-                <div className={style.cardContainer}>
-                  {/* Placeholders pour les cartes */}
-                  <div className={style.cardPlaceholder}></div>
-                  <div className={style.cardPlaceholder}></div>
-                </div>
-                <div className={style.score}>{playerScore}%</div>
-              </div>
-            );
-          })}
+          {dataSeat.map((data) => (
+            <Seat key={data.id} data={data} dataPlayerSeat={dataPlayerSeat} />
+          ))}
         </div>
 
         {/* DECK */}
