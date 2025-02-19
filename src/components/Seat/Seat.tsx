@@ -2,6 +2,7 @@ import { useDroppable } from "@dnd-kit/core";
 import { ICard } from "../../App";
 import CardPlaceholder from "../CardPlaceholder/CardPlaceholder";
 import style from "./Seat.module.css";
+import Card from "../Card/Card";
 
 type SeatProps = {
   readonly data: {
@@ -20,15 +21,19 @@ type SeatProps = {
 };
 
 export default function Seat({ data, dataPlayerSeat }: SeatProps) {
-  console.log(dataPlayerSeat);
   const { setNodeRef } = useDroppable({
-    id: data.id,
+    id: `player${data.id}`,
   });
   const playerId = `player${data.id}`;
   const playerScore =
     dataPlayerSeat[playerId].score === 0
       ? "00.00"
       : `${dataPlayerSeat[playerId].score}`;
+
+  const cards = dataPlayerSeat[playerId].cards;
+
+  const items = [...cards, ...Array(2 - cards.length).fill(null)];
+
   return (
     <div
       ref={setNodeRef}
@@ -40,10 +45,19 @@ export default function Seat({ data, dataPlayerSeat }: SeatProps) {
         top: `${data.posY}px`,
       }}
     >
-      <div className={style.id}>player {data.id}</div>
+      <div className={style.id}>{playerId}</div>
       <div className={style.cardContainer}>
-        <CardPlaceholder />
-        <CardPlaceholder />
+        {items.map((card, index) =>
+          card ? (
+            <Card
+              key={`${card.id}-${card.value}`}
+              suit={card.suit}
+              value={card.value}
+            />
+          ) : (
+            <CardPlaceholder key={`${index}-${card}`} />
+          )
+        )}
       </div>
       <div className={style.score}>{playerScore}%</div>
     </div>

@@ -3,7 +3,7 @@ import { useMemo, useState } from "react";
 import { dataSeat, suits } from "./utils/data";
 import { generateCardBySuit, getCardColor } from "./utils/functions";
 import Card from "./components/Card/Card";
-import { DndContext } from "@dnd-kit/core";
+import { DndContext, DragEndEvent } from "@dnd-kit/core";
 import CardPlaceholder from "./components/CardPlaceholder/CardPlaceholder";
 import Seat from "./components/Seat/Seat";
 import ResetButton from "./components/ResetButton/ResetButton";
@@ -42,6 +42,26 @@ function App() {
   // Utiliser useMemo pour éviter la régénération des cartes à chaque re-render
   const cards = useMemo(() => generateCardBySuit(), []); // Appel sans argument
 
+  const handleDrop = (e: DragEndEvent) => {
+    const newCard = e.active.data.current as ICard;
+    const targetZone = e.over?.id.toString();
+
+    // console.log(newCard);
+    // console.log(targetZone);
+
+    if (!newCard || !targetZone) return;
+
+    if (targetZone.startsWith("player")) {
+      setDataPlayerSeat((prevState) => ({
+        ...prevState,
+        [targetZone]: {
+          ...prevState[targetZone],
+          cards: [...prevState[targetZone].cards, newCard],
+        },
+      }));
+    }
+  };
+
   const handleReset = () => {
     setDataPlayerSeat(initialPlayerState);
     setFlopCards(initialFlopState);
@@ -50,7 +70,7 @@ function App() {
   };
 
   return (
-    <DndContext>
+    <DndContext onDragEnd={handleDrop}>
       <main className="App">
         <div className={style.table}>
           <img
