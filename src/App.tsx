@@ -1,15 +1,17 @@
 import style from "./App.module.css";
-import { useMemo, useState } from "react";
+import { useState } from "react";
 import { dataSeat, suits } from "./utils/data";
-import { generateCardBySuit, getCardColor } from "./utils/functions";
+import { generateDeck, getCardColor } from "./utils/functions";
 import Card from "./components/Card/Card";
 import { DndContext, DragEndEvent } from "@dnd-kit/core";
 import CardPlaceholder from "./components/CardPlaceholder/CardPlaceholder";
 import Seat from "./components/Seat/Seat";
 import ResetButton from "./components/ResetButton/ResetButton";
+import DeckPlaceholder from "./components/DeckPlaceholder/DeckPlaceholder";
 
 // Interface pour les cartes
 export interface ICard {
+  id: string;
   value: string; // La valeur de la carte, par exemple 'A', '10', etc.
   suit: string; // La couleur de la carte, par exemple 'hearts', 'diamonds'
   src: string; // Le chemin de l'image de la carte, par exemple '/images/ace_of_hearts.png'
@@ -33,21 +35,20 @@ function App() {
     "flop-3": null,
   } as { [key: string]: ICard | null };
 
+  // Utiliser useMemo pour éviter la régénération des cartes à chaque re-render
+
   // Utilisation de l'état pour les informations des joueurs
   const [dataPlayerSeat, setDataPlayerSeat] = useState(initialPlayerState);
+  const [deck, setDeck] = useState(generateDeck());
   const [flopCards, setFlopCards] = useState(initialFlopState);
   const [turnCard, setTurnCard] = useState(null); // La carte du turn
   const [riverCard, setRiverCard] = useState(null); // La carte de la river
 
-  // Utiliser useMemo pour éviter la régénération des cartes à chaque re-render
-  const cards = useMemo(() => generateCardBySuit(), []); // Appel sans argument
-
   const handleDrop = (e: DragEndEvent) => {
+    console.log(e.active.data);
     const newCard = e.active.data.current as ICard;
     const targetZone = e.over?.id.toString();
-
-    // console.log(newCard);
-    // console.log(targetZone);
+    console.log(newCard);
 
     if (!newCard || !targetZone) return;
 
@@ -60,13 +61,25 @@ function App() {
         },
       }));
     }
+
+    // Retirer la carte du deck après qu'elle a été jouée
+    // setDeck((prevDeck) => prevDeck.filter((card) => card.id !== newCard.id));
+
+    // mettre à jour le deck
+    setDeck((prevDeck) =>
+      prevDeck.map((card) =>
+        card.id === newCard.id ? { ...card, isPresent: false } : card
+      )
+    );
   };
 
+  // Reset le jeu
   const handleReset = () => {
     setDataPlayerSeat(initialPlayerState);
     setFlopCards(initialFlopState);
     setTurnCard(null);
     setRiverCard(null);
+    setDeck(generateDeck());
   };
 
   return (
@@ -153,6 +166,9 @@ function App() {
         <div className={style.deck}>
           {suits.map((suit) => {
             const suitData = getCardColor(suit.content);
+            const filteredDeck = deck.filter(
+              (card) => card.suit.content === suit.content
+            );
             return (
               <div key={suit.id} className={style.suits}>
                 <div className={`${style.block} ${suitData?.color ?? ""}`}>
@@ -164,13 +180,21 @@ function App() {
                     />
                   )}
                 </div>
-                {cards.map((card) => (
-                  <Card
-                    key={`${card.id}-${card.content}`}
-                    suit={suit.content}
-                    value={card.content}
-                  />
-                ))}
+                {filteredDeck.map((card) =>
+                  card.isPresent ? (
+                    <Card
+                      key={`${card.id}`}
+                      suit={card.suit.content}
+                      value={card.content}
+                    />
+                  ) : (
+                    <DeckPlaceholder
+                      key={card.id}
+                      suit={card.suit.content}
+                      value={card.content}
+                    />
+                  )
+                )}
               </div>
             );
           })}

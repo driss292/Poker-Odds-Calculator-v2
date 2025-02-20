@@ -10,8 +10,8 @@ type CardProps = {
 
 export default function Card({ suit, value }: CardProps) {
   const { attributes, listeners, setNodeRef, transform } = useDraggable({
-    id: `suit-${suit}-value-${value}`,
-    data: { suit, value },
+    id: `${suit}-${value}`,
+    data: { suit, value, id: `${suit}-${value}` },
   });
   const cardColor = getCardColor(suit);
   if (!cardColor) {

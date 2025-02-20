@@ -50,7 +50,7 @@ export default function Seat({ data, dataPlayerSeat }: SeatProps) {
         {items.map((card, index) =>
           card ? (
             <Card
-              key={`${card.id}-${card.value}`}
+              key={`${card.suit}-${card.value}`}
               suit={card.suit}
               value={card.value}
             />

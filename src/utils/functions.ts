@@ -1,11 +1,26 @@
-import { ranks } from "./data";
+import { ranks, suits } from "./data";
 import Spade from "../assets/spade.svg";
 import Club from "../assets/club.svg";
 import Heart from "../assets/heart.svg";
 import Diamond from "../assets/diamond.svg";
 
-export const generateCardBySuit = () => {
-  return ranks.map((rank) => ({ id: `${rank}`, content: rank }));
+export const generateCardBySuit = (suit: string) => {
+  return ranks.map((rank) => ({
+    id: `${rank}-${suit}`, // id : "A-spades", "10-hearts", etc.
+    suit,
+    content: rank,
+  }));
+};
+
+export const generateDeck = () => {
+  return ranks.flatMap((rank) =>
+    suits.map((suit) => ({
+      id: `${suit.content}-${rank}`, // id : "A-spades", "10-hearts", etc.
+      suit: suit,
+      content: rank,
+      isPresent: true,
+    }))
+  );
 };
 
 export const getCardColor = (
