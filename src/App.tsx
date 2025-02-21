@@ -1,12 +1,12 @@
 import style from "./App.module.css";
 import { useState } from "react";
-import { dataSeat, suits } from "./utils/data";
-import { generateDeck, getCardColor } from "./utils/functions";
+import { dataSeat } from "./utils/data";
+import { generateDeck } from "./utils/functions";
 import { DndContext, DragEndEvent } from "@dnd-kit/core";
 import CardPlaceholder from "./components/CardPlaceholder/CardPlaceholder";
 import Seat from "./components/Seat/Seat";
 import ResetButton from "./components/ResetButton/ResetButton";
-import Suit from "./components/Suit/Suit";
+import Deck from "./components/Deck/Deck";
 
 // Interface pour les cartes
 export interface ICard {
@@ -162,22 +162,7 @@ function App() {
         </div>
 
         {/* DECK */}
-        <div className={style.deck}>
-          {suits.map((suit) => {
-            const suitData = getCardColor(suit.content);
-            const filteredDeck = deck.filter(
-              (card) => card.suit.content === suit.content
-            );
-            return (
-              <Suit
-                key={suit.id}
-                suit={suit}
-                suitData={suitData}
-                filteredDeck={filteredDeck}
-              />
-            );
-          })}
-        </div>
+        <Deck deck={deck} />
       </main>
     </DndContext>
   );

@@ -1,0 +1,5 @@
+.deck {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  background: #f5f5f5;
+}
