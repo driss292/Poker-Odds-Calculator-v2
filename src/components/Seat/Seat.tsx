@@ -21,9 +21,6 @@ type SeatProps = {
 };
 
 export default function Seat({ data, dataPlayerSeat }: SeatProps) {
-  const { setNodeRef } = useDroppable({
-    id: `player${data.id}`,
-  });
   const playerId = `player${data.id}`;
   const playerScore =
     dataPlayerSeat[playerId].score === 0
@@ -31,6 +28,11 @@ export default function Seat({ data, dataPlayerSeat }: SeatProps) {
       : `${dataPlayerSeat[playerId].score}`;
 
   const cards = dataPlayerSeat[playerId].cards;
+
+  const { setNodeRef } = useDroppable({
+    id: `player${data.id}`,
+    disabled: cards.length >= 2, // ❌ Bloque le drop si 2 cartes sont présentes
+  });
 
   const items = [...cards, ...Array(2 - cards.length).fill(null)];
 
