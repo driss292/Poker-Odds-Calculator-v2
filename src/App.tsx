@@ -7,6 +7,7 @@ import CardPlaceholder from "./components/CardPlaceholder/CardPlaceholder";
 import Seat from "./components/Seat/Seat";
 import ResetButton from "./components/ResetButton/ResetButton";
 import Deck from "./components/Deck/Deck";
+import Flop from "./components/Flop/Flop";
 
 // Interface pour les cartes
 export interface ICard {
@@ -14,6 +15,7 @@ export interface ICard {
   value: string; // La valeur de la carte, par exemple 'A', '10', etc.
   suit: string; // La couleur de la carte, par exemple 'hearts', 'diamonds'
   src: string; // Le chemin de l'image de la carte, par exemple '/images/ace_of_hearts.png'
+  origin: string; // Le nom de la zone d'origine de la carte
 }
 
 function App() {
@@ -44,10 +46,14 @@ function App() {
   const [riverCard, setRiverCard] = useState(null); // La carte de la river
 
   const handleDrop = (e: DragEndEvent) => {
-    console.log(e.active.data);
     const newCard = e.active.data.current as ICard;
     const targetZone = e.over?.id.toString();
-    console.log(newCard);
+    const sourceZone = e.active.data.current?.origin; // La zone d'origine de l'élément
+
+    console.log(e.active.data);
+    console.log("===> TARGET ZONE", targetZone);
+    console.log("===> NEW CARD", newCard);
+    console.log("===> SOURCE ZONE", sourceZone);
 
     if (!newCard || !targetZone) return;
 
@@ -56,20 +62,42 @@ function App() {
         ...prevState,
         [targetZone]: {
           ...prevState[targetZone],
-          cards: [...prevState[targetZone].cards, newCard],
+          cards: [
+            ...prevState[targetZone].cards,
+            { ...newCard, zone: targetZone }, // Ajouter la propriété 'zone' ici
+          ],
+        },
+      }));
+
+      // mettre à jour le deck
+      setDeck((prevDeck) =>
+        prevDeck.map((card) =>
+          card.id === newCard.id
+            ? { ...card, isPresent: false, zone: targetZone }
+            : card
+        )
+      );
+    }
+
+    if (targetZone === "deck") {
+      setDeck((prevDeck) =>
+        prevDeck.map((card) =>
+          card.id === newCard.id
+            ? { ...card, isPresent: true, zone: sourceZone }
+            : card
+        )
+      );
+
+      setDataPlayerSeat((prevState) => ({
+        ...prevState,
+        [sourceZone]: {
+          ...prevState[sourceZone],
+          cards: prevState[sourceZone].cards.filter(
+            (card) => card.id !== newCard.id // Suppression de la carte par son 'id'
+          ),
         },
       }));
     }
-
-    // Retirer la carte du deck après qu'elle a été jouée
-    // setDeck((prevDeck) => prevDeck.filter((card) => card.id !== newCard.id));
-
-    // mettre à jour le deck
-    setDeck((prevDeck) =>
-      prevDeck.map((card) =>
-        card.id === newCard.id ? { ...card, isPresent: false } : card
-      )
-    );
   };
 
   // Reset le jeu
@@ -94,7 +122,8 @@ function App() {
           {/* BOARD */}
           <div className={style.boardContainer}>
             {/* Flop */}
-            <div
+            <Flop flopCards={flopCards} />
+            {/* <div
               className={style.cardZone}
               style={{ display: "flex", marginRight: "10px" }}
             >
@@ -116,7 +145,7 @@ function App() {
                   }
                 ></div>
               ))}
-            </div>
+            </div> */}
 
             {/* Turn */}
             <div className={style.cardZone} style={{ marginRight: "10px" }}>

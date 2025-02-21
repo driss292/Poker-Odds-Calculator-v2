@@ -6,12 +6,14 @@ import style from "./Card.module.css";
 type CardProps = {
   readonly suit: string;
   readonly value: string;
+  readonly zone: string;
 };
 
-export default function Card({ suit, value }: CardProps) {
+export default function Card({ suit, value, zone }: Readonly<CardProps>) {
+  // console.log(suit, value, zone);
   const { attributes, listeners, setNodeRef, transform } = useDraggable({
     id: `${suit}-${value}`,
-    data: { suit, value, id: `${suit}-${value}` },
+    data: { suit, value, id: `${suit}-${value}`, origin: zone },
   });
   const cardColor = getCardColor(suit);
   if (!cardColor) {

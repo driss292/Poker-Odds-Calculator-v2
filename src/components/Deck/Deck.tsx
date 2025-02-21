@@ -1,3 +1,4 @@
+import { useDroppable } from "@dnd-kit/core";
 import { suits } from "../../utils/data";
 import { getCardColor } from "../../utils/functions";
 import Suit from "../Suit/Suit";
@@ -11,11 +12,15 @@ type CardType = {
   };
   content: string;
   isPresent: boolean;
+  zone: string;
 };
 
 export default function Deck({ deck }: Readonly<{ deck: CardType[] }>) {
+  const { setNodeRef } = useDroppable({
+    id: `deck`,
+  });
   return (
-    <div className={style.deck}>
+    <div className={style.deck} ref={setNodeRef}>
       {suits.map((suit) => {
         const suitData = getCardColor(suit.content);
         const filteredDeck = deck.filter(

@@ -11,6 +11,7 @@ type CardType = {
   };
   content: string;
   isPresent: boolean;
+  zone: string;
 };
 
 type Props = {
@@ -24,6 +25,7 @@ export default function Suit({
   suitData,
   filteredDeck,
 }: Readonly<Props>) {
+  // console.log(filteredDeck);
   return (
     <div key={suit.id} className={style.suits}>
       <div className={`${style.block} ${suitData?.color ?? ""}`}>
@@ -35,6 +37,7 @@ export default function Suit({
             key={`${card.id}`}
             suit={card.suit.content}
             value={card.content}
+            zone={card.zone}
           />
         ) : (
           <DeckPlaceholder

@@ -31,7 +31,7 @@ export default function Seat({ data, dataPlayerSeat }: SeatProps) {
 
   const { setNodeRef } = useDroppable({
     id: `player${data.id}`,
-    disabled: cards.length >= 2, // ❌ Bloque le drop si 2 cartes sont présentes
+    disabled: cards.length >= 2,
   });
 
   const items = [...cards, ...Array(2 - cards.length).fill(null)];
@@ -55,6 +55,7 @@ export default function Seat({ data, dataPlayerSeat }: SeatProps) {
               key={`${card.suit}-${card.value}`}
               suit={card.suit}
               value={card.value}
+              zone={card.zone}
             />
           ) : (
             <CardPlaceholder key={`${index}-${card}`} />
