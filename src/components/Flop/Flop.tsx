@@ -13,7 +13,6 @@ export default function Flop({ flopCards }: Readonly<FlopCardProps>) {
     id: `flop`,
     disabled: flopCards.length >= 3,
   });
-  // console.log("===> FLOP CARDS", flopCards);
 
   const items = [...flopCards, ...Array(3 - flopCards.length).fill(null)];
 
