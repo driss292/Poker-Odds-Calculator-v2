@@ -10,7 +10,6 @@ type CardProps = {
 };
 
 export default function Card({ suit, value, zone }: Readonly<CardProps>) {
-  // console.log(suit, value, zone);
   const { attributes, listeners, setNodeRef, transform } = useDraggable({
     id: `${suit}-${value}`,
     data: { suit, value, id: `${suit}-${value}`, origin: zone },

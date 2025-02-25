@@ -1,40 +1,34 @@
 import { useDroppable } from "@dnd-kit/core";
 import { ICard } from "../../App";
 import CardPlaceholder from "../CardPlaceholder/CardPlaceholder";
-import style from "./Flop.module.css";
+import style from "./River.module.css";
 import Card from "../Card/Card";
 
-type FlopCardProps = {
-  flopCards: ICard[]; // Déclaration explicite du type
+type riverCardProps = {
+  riverCard: ICard[]; // Déclaration explicite du type
 };
 
-export default function Flop({ flopCards }: Readonly<FlopCardProps>) {
+export default function River({ riverCard }: Readonly<riverCardProps>) {
   const { setNodeRef } = useDroppable({
-    id: `flop`,
-    disabled: flopCards.length >= 3,
+    id: `river`,
+    disabled: riverCard.length >= 1,
   });
-  // console.log("===> FLOP CARDS", flopCards);
 
-  const items = [...flopCards, ...Array(3 - flopCards.length).fill(null)];
-
+  const items = [...riverCard, ...Array(1 - riverCard.length).fill(null)];
   return (
-    <div
-      ref={setNodeRef}
-      className={style.cardZone}
-      style={{ display: "flex", marginRight: "10px" }}
-    >
+    <div ref={setNodeRef} className={style.cardZone}>
       <span
         className={style.titleZone}
         style={{
           top: "55px",
-          left: "47px",
+          left: "175px",
         }}
       >
-        Flop
+        River
       </span>
       {items.map((card, index) => (
         <div
-          key={`flop-${index}-${card?.value ?? "empty"}`} // Clé sécurisée
+          key={`turn-${index}-${card?.value ?? "empty"}`} // Clé sécurisée
           style={{ marginLeft: index > 0 ? "5px" : "0px" }}
           className={card ? style.cardPlaceholderOfCard : style.cardPlaceholder}
         >
