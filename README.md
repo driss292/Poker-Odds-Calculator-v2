@@ -1,54 +1,47 @@
-# React + TypeScript + Vite
+# Poker Odds Calculator
 
-<!-- https://medium.com/@kurniawanc/implement-drag-and-drop-feature-in-react-js-using-dnd-kit-library-4cbd7e4b8135 -->
+Ce projet est un calculateur de probabilités de gain au poker permettant aux joueurs d'évaluer leurs chances en fonction des cartes disponibles.
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+<img src="https://res.cloudinary.com/dbu3ntrbw/image/upload/v1740502286/Capture_d_e%CC%81cran_2025-02-25_a%CC%80_17.50.57_wcjtlh.png">
 
-Currently, two official plugins are available:
+## Description du projet
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+L'application permet d'effectuer un drag and drop des cartes sur une table virtuelle pour obtenir une estimation des probabilités de gain.
 
-## Expanding the ESLint configuration
+Elle a été initialement conçue comme une extension Chrome, mais une version navigateur sera également disponible.
 
-If you are developing a production application, we recommend updating the configuration to enable type aware lint rules:
+## Fonctionnalités
 
-- Configure the top-level `parserOptions` property like this:
+- Drag and drop des cartes sur la table de jeu
+- Calcul automatique des probabilités de gain
+- Affichage clair des statistiques
+- Deux versions : une extension Chrome et une version navigateur
 
-```js
-export default tseslint.config({
-  languageOptions: {
-    // other options...
-    parserOptions: {
-      project: ["./tsconfig.node.json", "./tsconfig.app.json"],
-      tsconfigRootDir: import.meta.dirname,
-    },
-  },
-});
-```
+## Technologies utilisées
 
-- Replace `tseslint.configs.recommended` to `tseslint.configs.recommendedTypeChecked` or `tseslint.configs.strictTypeChecked`
-- Optionally add `...tseslint.configs.stylisticTypeChecked`
-- Install [eslint-plugin-react](https://github.com/jsx-eslint/eslint-plugin-react) and update the config:
+- **React** : Librairie JavaScript pour l'interface utilisateur
+- **TypeScript** : Typage statique pour améliorer la robustesse du code
+- **Dnd Kit** : Gestion du drag and drop [Lien vers la tutoriel utilisé](https://medium.com/@kurniawanc/implement-drag-and-drop-feature-in-react-js-using-dnd-kit-library-4cbd7e4b8135)
+- **Modules CSS** : Pour le style de l'application
 
-```js
-// eslint.config.js
-import react from "eslint-plugin-react";
+## Installation et Utilisation
 
-export default tseslint.config({
-  // Set the react version
-  settings: { react: { version: "18.3" } },
-  plugins: {
-    // Add the react plugin
-    react,
-  },
-  rules: {
-    // other rules...
-    // Enable its recommended rules
-    ...react.configs.recommended.rules,
-    ...react.configs["jsx-runtime"].rules,
-  },
-});
-```
+### Version Navigateur
 
-# POC---Poker-Odds-Calculator
+Utilisez directement l'application sans installation : [Lien vers la version web - bientôt disponible](#)
+
+### Version Extension Chrome
+
+Téléchargez l'extension ici : [Lien de téléchargement - bientôt disponible](#)
+
+Ajoutez-la à Chrome :
+
+1. Ouvrez `chrome://extensions/`
+2. Activez le mode Développeur (en haut à droite)
+3. Cliquez sur "Charger un paquet non empaqueté"
+4. Sélectionnez le dossier contenant l'extension
+5. Lancez l'application et commencez à calculer vos probabilités de gain !
+
+## Contact
+
+Pour toute question ou suggestion, n'hésitez pas à me contacter via GitHub.
