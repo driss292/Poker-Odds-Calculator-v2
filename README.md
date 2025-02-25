@@ -1,5 +1,7 @@
 # Poker Odds Calculator
 
+## Work in progress
+
 Ce projet est un calculateur de probabilités de gain au poker permettant aux joueurs d'évaluer leurs chances en fonction des cartes disponibles.
 
 <img src="https://res.cloudinary.com/dbu3ntrbw/image/upload/v1740502286/Capture_d_e%CC%81cran_2025-02-25_a%CC%80_17.50.57_wcjtlh.png">
