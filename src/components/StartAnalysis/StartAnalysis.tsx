@@ -1,17 +1,21 @@
 import style from "./StartAnalysis.module.css";
-import { BiAnalyse } from "react-icons/bi";
 
 type startAnalysisProps = {
   handleStartAnalisis: () => void;
+  isAnalysisEnabled: boolean;
 };
 
 export default function StartAnalysis({
   handleStartAnalisis,
+  isAnalysisEnabled,
 }: Readonly<startAnalysisProps>) {
   return (
-    <button onClick={handleStartAnalisis} className={style.startAnalysis}>
-      <span className={style.startButtonText}>Start</span>
-      <BiAnalyse style={{ fontSize: "40px" }} />
+    <button
+      onClick={handleStartAnalisis}
+      disabled={!isAnalysisEnabled}
+      className={style.startAnalysis}
+    >
+      Start
     </button>
   );
 }

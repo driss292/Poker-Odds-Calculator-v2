@@ -1,14 +1,26 @@
 .startAnalysis {
   position: absolute;
-  border: none;
+  min-width: 90px;
+  border: 1px solid rgb(187, 187, 187);
   background: transparent;
-  color: white;
-  bottom: 225px;
-  left: 20px;
+  color: rgb(187, 187, 187);
+  border-radius: 4px;
+  bottom: 315px;
+  left: 301px;
   cursor: pointer;
+  padding: 5px 10px;
 
   &:active {
-    scale: 0.9;
+    background: rgb(165, 43, 67);
+  }
+  &:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+  &:hover {
+    background: crimson;
+    color: white;
+    border: 1px solid crimson;
   }
 }
 

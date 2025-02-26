@@ -1,13 +1,26 @@
 .resetButton {
   position: absolute;
-  border: none;
+  min-width: 90px;
+  border: 1px solid rgb(187, 187, 187);
   background: none;
-  bottom: 225px;
-  left: 85px;
-  color: white;
+  padding: 5px 10px;
+  border-radius: 4px;
+  bottom: 315px;
+  left: 410px;
+  color: rgb(187, 187, 187);
   cursor: pointer;
+
+  &:hover {
+    background: crimson;
+    color: white;
+    border: 1px solid crimson;
+  }
   &:active {
-    scale: 0.9;
+    background: rgb(165, 43, 67);
+  }
+  &:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
   }
 }
 

@@ -1,5 +1,5 @@
 import style from "./App.module.css";
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { dataSeat } from "./utils/data";
 import { DndContext, DragEndEvent } from "@dnd-kit/core";
 import Seat from "./components/Seat/Seat";
@@ -114,9 +114,38 @@ function App() {
     }
   };
 
+  const isAnalysisEnabled = useMemo(() => {
+    const playerSeatsArray = Object.values(dataPlayerSeat);
+    const filledSeats = playerSeatsArray.filter(
+      (seat) => seat.cards.length === 2
+    );
+    const occupiedSeats = playerSeatsArray.filter(
+      (seat) => seat.cards.length > 0
+    );
+
+    const hasMinPlayers = filledSeats.length >= 2;
+    const allPlayersComplete = filledSeats.length === occupiedSeats.length;
+
+    const isFlopValid = flopCards.length === 0 || flopCards.length === 3;
+
+    return (
+      hasMinPlayers &&
+      (filledSeats.length === 2 || allPlayersComplete) &&
+      isFlopValid
+    );
+  }, [dataPlayerSeat, flopCards]);
+
+  const isResetEnabled = useMemo(() => {
+    const playerSeatsArray = Object.values(dataPlayerSeat);
+    return playerSeatsArray.some((playerSeat) => playerSeat.cards.length > 0);
+  }, [dataPlayerSeat]);
+
+  const handleStartAnalisis = () => {
+    console.log("start");
+  };
+
   // Reset le jeu
   const handleReset = () => {
-    console.log("reset");
     setDataPlayerSeat(initialPlayerState);
     setFlopCards([]);
     setTurnCard([]);
@@ -124,17 +153,19 @@ function App() {
     setDeck(generateDeck());
   };
 
-  const handleStartAnalisis = () => {
-    console.log("start");
-  };
-
   return (
     <DndContext onDragEnd={handleDrop}>
       <main className="App">
         <div>
-          <StartAnalysis handleStartAnalisis={handleStartAnalisis} />
+          <StartAnalysis
+            isAnalysisEnabled={isAnalysisEnabled}
+            handleStartAnalisis={handleStartAnalisis}
+          />
           <ImageTable />
-          <ResetButton handleReset={handleReset} />
+          <ResetButton
+            isResetEnabled={isResetEnabled}
+            handleReset={handleReset}
+          />
 
           {/* BOARD */}
           <div className={style.boardContainer}>
