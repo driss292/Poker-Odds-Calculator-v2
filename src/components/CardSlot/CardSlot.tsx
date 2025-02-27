@@ -1,8 +1,9 @@
 import { useDroppable } from "@dnd-kit/core";
 import style from "./CardSlot.module.css";
-import { ICard } from "../../App";
+
 import Card from "../Card/Card";
 import CardPlaceholder from "../CardPlaceholder/CardPlaceholder";
+import { ICard } from "../../types/card";
 
 type CardSlotProps = { zoneId: string; index: number; card: ICard | null };
 

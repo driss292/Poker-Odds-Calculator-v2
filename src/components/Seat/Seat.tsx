@@ -1,8 +1,8 @@
 import { useDroppable } from "@dnd-kit/core";
-import { ICard } from "../../App";
 import CardPlaceholder from "../CardPlaceholder/CardPlaceholder";
 import style from "./Seat.module.css";
 import Card from "../Card/Card";
+import { ICard } from "../../types/card";
 
 type SeatProps = {
   readonly data: {
@@ -25,7 +25,7 @@ export default function Seat({ data, dataPlayerSeat }: SeatProps) {
   const playerScore =
     dataPlayerSeat[playerId].score === 0
       ? "00.00"
-      : `${dataPlayerSeat[playerId].score}`;
+      : dataPlayerSeat[playerId].score.toFixed(2);
 
   const cards = dataPlayerSeat[playerId].cards;
 

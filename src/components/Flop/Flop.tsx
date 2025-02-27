@@ -1,8 +1,8 @@
 import { useDroppable } from "@dnd-kit/core";
-import { ICard } from "../../App";
 import CardPlaceholder from "../CardPlaceholder/CardPlaceholder";
 import style from "./Flop.module.css";
 import Card from "../Card/Card";
+import { ICard } from "../../types/card";
 
 type FlopCardProps = {
   flopCards: ICard[]; // Déclaration explicite du type

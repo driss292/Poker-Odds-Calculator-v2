@@ -1,5 +1,5 @@
 import style from "./App.module.css";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { dataSeat } from "./utils/data";
 import { DndContext, DragEndEvent } from "@dnd-kit/core";
 import Seat from "./components/Seat/Seat";
@@ -12,6 +12,7 @@ import ImageTable from "./components/ImageTable/ImageTable";
 import { ICard } from "./types/card";
 import { generateDeck, initialPlayerState } from "./utils/functions";
 import StartAnalysis from "./components/StartAnalysis/StartAnalysis";
+import { Card, Value, Suit, calculateOdds } from "./utils/calculateOdds";
 
 function App() {
   // Utilisation de l'état pour les informations des joueurs
@@ -20,6 +21,7 @@ function App() {
   const [flopCards, setFlopCards] = useState<ICard[]>([]);
   const [turnCard, setTurnCard] = useState<ICard[]>([]);
   const [riverCard, setRiverCard] = useState<ICard[]>([]);
+  const [shouldResetScores, setShouldResetScores] = useState(false);
 
   const updateDeck = (newCard: ICard, zone: string, isPresent: boolean) => {
     setDeck((prevDeck) =>
@@ -112,12 +114,15 @@ function App() {
       removeCardFromSource(newCard, sourceZone);
       updateDeck(newCard, sourceZone, true);
     }
+
+    // Indiquer que les scores doivent être réinitialisés
+    setShouldResetScores(true);
   };
 
   const isAnalysisEnabled = useMemo(() => {
     const playerSeatsArray = Object.values(dataPlayerSeat);
     const filledSeats = playerSeatsArray.filter(
-      (seat) => seat.cards.length === 2
+      (seat) => seat.cards && seat.cards.length === 2
     );
     const occupiedSeats = playerSeatsArray.filter(
       (seat) => seat.cards.length > 0
@@ -142,6 +147,37 @@ function App() {
 
   const handleStartAnalisis = () => {
     console.log("start");
+
+    // Création d'une correspondance entre les joueurs et leurs indices
+    const playerEntries = Object.entries(dataPlayerSeat).filter(
+      ([, seat]) => seat.cards.length > 0
+    );
+
+    const playerHands: Card[][] = playerEntries.map(([, seat]) =>
+      seat.cards.map((card) => new Card(card.value as Value, card.suit as Suit))
+    );
+
+    const communityCards = [...flopCards, ...turnCard, ...riverCard].map(
+      (card) => new Card(card.value as Value, card.suit as Suit)
+    );
+
+    const odds = calculateOdds(playerHands, communityCards);
+
+    // Mise à jour des scores en gardant l'association correcte avec les joueurs
+    setDataPlayerSeat((prevState) => {
+      const newState = { ...prevState };
+
+      playerEntries.forEach(([playerKey], index) => {
+        newState[playerKey] = {
+          ...newState[playerKey],
+          score: odds[index], // Utilisation de l'index dans le bon ordre
+        };
+      });
+
+      return newState;
+    });
+
+    console.log("===> ODDS", odds);
   };
 
   // Reset le jeu
@@ -152,6 +188,20 @@ function App() {
     setRiverCard([]);
     setDeck(generateDeck());
   };
+
+  // Nettoyer le composant lorsque les cartes d'un siège changent
+  useEffect(() => {
+    if (shouldResetScores) {
+      setDataPlayerSeat((prevState) => {
+        const updatedState = { ...prevState };
+        Object.keys(updatedState).forEach((key) => {
+          updatedState[key].score = 0;
+        });
+        return updatedState;
+      });
+    }
+    setShouldResetScores(false);
+  }, [shouldResetScores]);
 
   return (
     <DndContext onDragEnd={handleDrop}>

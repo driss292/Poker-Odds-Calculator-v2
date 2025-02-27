@@ -29,8 +29,7 @@ export const getCardColor = (suit: string): { src: string; color: string } => {
   return cardColors[suit] ?? { src: Spade, color: "" }; // Spade comme fallback
 };
 
-export // Initialisation de l'état des joueurs
-const initialPlayerState = dataSeat.reduce((acc, seat) => {
+export const initialPlayerState = dataSeat.reduce((acc, seat) => {
   acc[`player${seat.id}`] = {
     cards: [], // Pas de cartes pour le moment
     posX: seat.posX,

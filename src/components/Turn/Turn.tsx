@@ -1,8 +1,9 @@
 import { useDroppable } from "@dnd-kit/core";
-import { ICard } from "../../App";
+
 import CardPlaceholder from "../CardPlaceholder/CardPlaceholder";
 import style from "./Turn.module.css";
 import Card from "../Card/Card";
+import { ICard } from "../../types/card";
 
 type TurnCardProps = {
   turnCard: ICard[]; // Déclaration explicite du type
