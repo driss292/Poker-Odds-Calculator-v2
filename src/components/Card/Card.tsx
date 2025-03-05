@@ -12,7 +12,7 @@ type CardProps = {
 export default function Card({ suit, value, zone }: Readonly<CardProps>) {
   const { attributes, listeners, setNodeRef, transform } = useDraggable({
     id: `${suit}-${value}`,
-    data: { suit, value, id: `${suit}-${value}`, origin: zone },
+    data: { suit, value, id: `${value}-${suit}`, origin: zone },
   });
   const cardColor = getCardColor(suit);
   if (!cardColor) {

@@ -8,7 +8,7 @@ import { ICard } from "../types/card";
 export const generateDeck = () => {
   return ranks.flatMap((rank) =>
     suits.map((suit) => ({
-      id: `${suit.content}-${rank}`, // id : "A-spades", "10-hearts", etc.
+      id: `${rank}-${suit.content}`, // id : "A-spades", "10-hearts", etc.
       suit: suit,
       content: rank,
       isPresent: true,
@@ -38,3 +38,11 @@ export const initialPlayerState = dataSeat.reduce((acc, seat) => {
   };
   return acc;
 }, {} as { [key: string]: { cards: ICard[]; posX: number; posY: number; score: number } });
+
+export const formatPlayerCard = (card: string) => {
+  const arrayOfCard = card.split("-");
+  const value = arrayOfCard[0];
+  const suit = arrayOfCard[1].charAt(0);
+
+  return `${value}${suit}`;
+};

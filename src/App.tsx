@@ -10,9 +10,12 @@ import Turn from "./components/Turn/Turn";
 import River from "./components/River/River";
 import ImageTable from "./components/ImageTable/ImageTable";
 import { ICard } from "./types/card";
-import { generateDeck, initialPlayerState } from "./utils/functions";
+import {
+  formatPlayerCard,
+  generateDeck,
+  initialPlayerState,
+} from "./utils/functions";
 import StartAnalysis from "./components/StartAnalysis/StartAnalysis";
-import { Card, Value, Suit, calculateOdds } from "./utils/calculateOdds";
 
 function App() {
   // Utilisation de l'état pour les informations des joueurs
@@ -55,6 +58,8 @@ function App() {
     const newCard = e.active.data.current as ICard;
     const targetZone = e.over?.id.toString();
     const sourceZone = e.active.data.current?.origin;
+
+    // console.log("New card", newCard);
 
     if (!newCard || !targetZone) return;
 
@@ -146,38 +151,33 @@ function App() {
   }, [dataPlayerSeat]);
 
   const handleStartAnalisis = () => {
-    console.log("start");
-
     // Création d'une correspondance entre les joueurs et leurs indices
+    console.log(dataPlayerSeat);
     const playerEntries = Object.entries(dataPlayerSeat).filter(
       ([, seat]) => seat.cards.length > 0
     );
+    for (const [, seat] of playerEntries) {
+      const card1 = formatPlayerCard(seat.cards[0].id);
+      const card2 = formatPlayerCard(seat.cards[1].id);
 
-    const playerHands: Card[][] = playerEntries.map(([, seat]) =>
-      seat.cards.map((card) => new Card(card.value as Value, card.suit as Suit))
-    );
+      const playerCards = [...card1, ...card2].join("");
 
-    const communityCards = [...flopCards, ...turnCard, ...riverCard].map(
-      (card) => new Card(card.value as Value, card.suit as Suit)
-    );
+      console.log("PLAYER CARDS", playerCards);
 
-    const odds = calculateOdds(playerHands, communityCards);
+      // Mise à jour des scores en gardant l'association correcte avec les joueurs
+      // setDataPlayerSeat((prevState) => {
+      //   const newState = { ...prevState };
 
-    // Mise à jour des scores en gardant l'association correcte avec les joueurs
-    setDataPlayerSeat((prevState) => {
-      const newState = { ...prevState };
+      //   playerEntries.forEach(([playerKey], index) => {
+      //     newState[playerKey] = {
+      //       ...newState[playerKey],
+      //       score: odds[index], // Utilisation de l'index dans le bon ordre
+      //     };
+      //   });
 
-      playerEntries.forEach(([playerKey], index) => {
-        newState[playerKey] = {
-          ...newState[playerKey],
-          score: odds[index], // Utilisation de l'index dans le bon ordre
-        };
-      });
-
-      return newState;
-    });
-
-    console.log("===> ODDS", odds);
+      //   return newState;
+      // });
+    }
   };
 
   // Reset le jeu
