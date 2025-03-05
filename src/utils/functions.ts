@@ -39,7 +39,7 @@ export const initialPlayerState = dataSeat.reduce((acc, seat) => {
   return acc;
 }, {} as { [key: string]: { cards: ICard[]; posX: number; posY: number; score: number } });
 
-export const formatPlayerCard = (card: string) => {
+export const formatCard = (card: string) => {
   const arrayOfCard = card.split("-");
   const value = arrayOfCard[0];
   const suit = arrayOfCard[1].charAt(0);

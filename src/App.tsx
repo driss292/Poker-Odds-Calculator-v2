@@ -1,5 +1,5 @@
 import style from "./App.module.css";
-import { useEffect, useMemo, useState } from "react";
+import { useMemo, useState } from "react";
 import { dataSeat } from "./utils/data";
 import { DndContext, DragEndEvent } from "@dnd-kit/core";
 import Seat from "./components/Seat/Seat";
@@ -11,11 +11,13 @@ import River from "./components/River/River";
 import ImageTable from "./components/ImageTable/ImageTable";
 import { ICard } from "./types/card";
 import {
-  formatPlayerCard,
+  formatCard,
   generateDeck,
   initialPlayerState,
 } from "./utils/functions";
 import StartAnalysis from "./components/StartAnalysis/StartAnalysis";
+import { OddsCalculator } from "./utils/Calculator/OddsCalculator";
+import { CardGroup } from "./utils/Calculator/CardGroup";
 
 function App() {
   // Utilisation de l'état pour les informations des joueurs
@@ -24,7 +26,7 @@ function App() {
   const [flopCards, setFlopCards] = useState<ICard[]>([]);
   const [turnCard, setTurnCard] = useState<ICard[]>([]);
   const [riverCard, setRiverCard] = useState<ICard[]>([]);
-  const [shouldResetScores, setShouldResetScores] = useState(false);
+  // const [shouldResetScores, setShouldResetScores] = useState(false);
 
   const updateDeck = (newCard: ICard, zone: string, isPresent: boolean) => {
     setDeck((prevDeck) =>
@@ -58,8 +60,6 @@ function App() {
     const newCard = e.active.data.current as ICard;
     const targetZone = e.over?.id.toString();
     const sourceZone = e.active.data.current?.origin;
-
-    // console.log("New card", newCard);
 
     if (!newCard || !targetZone) return;
 
@@ -121,7 +121,7 @@ function App() {
     }
 
     // Indiquer que les scores doivent être réinitialisés
-    setShouldResetScores(true);
+    // setShouldResetScores(true);
   };
 
   const isAnalysisEnabled = useMemo(() => {
@@ -152,32 +152,39 @@ function App() {
 
   const handleStartAnalisis = () => {
     // Création d'une correspondance entre les joueurs et leurs indices
-    console.log(dataPlayerSeat);
     const playerEntries = Object.entries(dataPlayerSeat).filter(
       ([, seat]) => seat.cards.length > 0
     );
-    for (const [, seat] of playerEntries) {
-      const card1 = formatPlayerCard(seat.cards[0].id);
-      const card2 = formatPlayerCard(seat.cards[1].id);
 
-      const playerCards = [...card1, ...card2].join("");
+    const playerHands = playerEntries.map(([, seat]) => {
+      const card1 = formatCard(seat.cards[0].id);
+      const card2 = formatCard(seat.cards[1].id);
+      const playerHand = [...card1, ...card2].join("");
 
-      console.log("PLAYER CARDS", playerCards);
+      return CardGroup.fromString(playerHand);
+    });
 
-      // Mise à jour des scores en gardant l'association correcte avec les joueurs
-      // setDataPlayerSeat((prevState) => {
-      //   const newState = { ...prevState };
+    const communityCards = [...flopCards, ...turnCard, ...riverCard]
+      .map((card) => formatCard(card.id))
+      .join("");
 
-      //   playerEntries.forEach(([playerKey], index) => {
-      //     newState[playerKey] = {
-      //       ...newState[playerKey],
-      //       score: odds[index], // Utilisation de l'index dans le bon ordre
-      //     };
-      //   });
+    const board = CardGroup.fromString(communityCards);
 
-      //   return newState;
-      // });
-    }
+    const result = OddsCalculator.calculate(playerHands, board);
+
+    // Mise à jour des scores en gardant l'association correcte avec les joueurs
+    setDataPlayerSeat((prevState) => {
+      const newState = { ...prevState };
+
+      playerEntries.forEach(([playerKey], index) => {
+        newState[playerKey] = {
+          ...newState[playerKey],
+          score: result.equities[index].getEquity(), // Utilisation de l'index dans le bon ordre
+        };
+      });
+
+      return newState;
+    });
   };
 
   // Reset le jeu
@@ -190,18 +197,18 @@ function App() {
   };
 
   // Nettoyer le composant lorsque les cartes d'un siège changent
-  useEffect(() => {
-    if (shouldResetScores) {
-      setDataPlayerSeat((prevState) => {
-        const updatedState = { ...prevState };
-        Object.keys(updatedState).forEach((key) => {
-          updatedState[key].score = 0;
-        });
-        return updatedState;
-      });
-    }
-    setShouldResetScores(false);
-  }, [shouldResetScores]);
+  // useEffect(() => {
+  //   if (shouldResetScores) {
+  //     setDataPlayerSeat((prevState) => {
+  //       const updatedState = { ...prevState };
+  //       Object.keys(updatedState).forEach((key) => {
+  //         updatedState[key].score = 0;
+  //       });
+  //       return updatedState;
+  //     });
+  //   }
+  //   setShouldResetScores(false);
+  // }, [shouldResetScores]);
 
   return (
     <DndContext onDragEnd={handleDrop}>
