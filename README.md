@@ -24,6 +24,13 @@ Elle a été initialement conçue comme une extension Chrome, mais une version n
 - **Dnd Kit** : Gestion du drag and drop [Lien vers la tutoriel utilisé](https://medium.com/@kurniawanc/implement-drag-and-drop-feature-in-react-js-using-dnd-kit-library-4cbd7e4b8135)
 - **Modules CSS** : Pour le style de l'application
 
+## Améliorations prévues
+
+- Sauvegarde des Cartes 
+- Affichage des probabilités de partage
+- Historique des Mains
+- Combinaisons des joueurs
+
 ## Installation et Utilisation
 
 ### Version Navigateur
