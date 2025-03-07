@@ -26,10 +26,10 @@ Elle a été initialement conçue comme une extension Chrome, mais une version n
 
 ## Améliorations prévues
 
-- Sauvegarde des Cartes 
 - Affichage des probabilités de partage
-- Historique des Mains
 - Combinaisons des joueurs
+- Sauvegarde des Cartes via le LocalStorage 
+- Historique des Mains
 
 ## Installation et Utilisation
 
